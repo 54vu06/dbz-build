@@ -53,6 +53,11 @@ if s.count(old) != 1:
 s = s.replace(old, "object:24\t青蛙\tnames_objects:24 override")
 # 全遊戲「飛里沙」統一為「弗力札」（字數相同，不影響版面）
 s = s.replace("飛里沙", "弗力札")
+# 開場致謝頁：保留原字樣，下方加上第二組致謝（三行以內，每行不超過 17 個全形字）
+old = "str3:0x3E\t　　　　　　　　台式中文化\\n　　　Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\tk3:62 split"
+if s.count(old) != 1:
+    sys.exit("[patch 失敗] tsv 找不到開場致謝 str3:0x3E")
+s = s.replace(old, "str3:0x3E\t台式中文化，Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\\n魔改歡樂基紐、弗力札版，\\nＢｙ　Ａｃｈ　Ｌｅｅ\tk3:62 split")
 p.write_text(s, encoding="utf-8", newline="")
 
 edit("crates/ssd-catalogue/src/art.rs", [
