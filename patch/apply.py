@@ -51,6 +51,8 @@ old = "object:24\t海龜\tnames_objects:24 override"
 if s.count(old) != 1:
     sys.exit("[patch 失敗] tsv 找不到 object:24")
 s = s.replace(old, "object:24\t青蛙\tnames_objects:24 override")
+# 全遊戲「飛里沙」統一為「弗力札」（字數相同，不影響版面）
+s = s.replace("飛里沙", "弗力札")
 p.write_text(s, encoding="utf-8", newline="")
 
 edit("crates/ssd-catalogue/src/art.rs", [
