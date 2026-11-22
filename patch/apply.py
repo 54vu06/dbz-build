@@ -3,7 +3,7 @@ root = pathlib.Path(sys.argv[1])
 
 def edit(rel, pairs):
     p = root / rel
-    s = p.read_text(encoding="utf-8", newline="")
+    s = p.read_text(encoding="utf-8")
     for old, new in pairs:
         if s.count(old) != 1:
             sys.exit(f"[patch 失敗] {rel} 找不到唯一的錨點:\n{old[:80]}")
@@ -41,7 +41,7 @@ edit("crates/ssd-catalogue/src/menus.rs", [
 ])
 
 p = root / "translations/zh-tw/zh-tw.tsv"
-s = p.read_text(encoding="utf-8", newline="")
+s = p.read_text(encoding="utf-8")
 for k, v in (("13", "弗力札"), ("14", "基紐")):
     old = f"string:{k}\t卜卦婆婆\tnames_strings:{k} override"
     if s.count(old) != 1:
