@@ -53,16 +53,30 @@ if s.count(old) != 1:
 s = s.replace(old, "object:24\t青蛙\tnames_objects:24 override")
 # 全遊戲「飛里沙」統一為「弗力札」（字數相同，不影響版面）
 s = s.replace("飛里沙", "弗力札")
-# 開場致謝頁：保留原字樣，下方加上第二組致謝（三行以內，每行不超過 17 個全形字）
+# 開場致謝頁：保留原字樣，下方加上第二組致謝（三行以內，每行最多 16 格，這裡取 15 格以內）
 old = "str3:0x3E\t　　　　　　　　台式中文化\\n　　　Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\tk3:62 split"
 if s.count(old) != 1:
     sys.exit("[patch 失敗] tsv 找不到開場致謝 str3:0x3E")
-s = s.replace(old, "str3:0x3E\t台式中文化，Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\\n魔改歡樂基紐、弗力札版，\\n　　　　　　Ｂｙ　Ａｃｈ　Ｌｅｅ\tk3:62 split")
+s = s.replace(old, "str3:0x3E\t台式中文化，ＢｙＭｉｎｇＬｉｕ\\n魔改歡樂基紐、弗力札版，\\n　　　　　　ＢｙＡｃｈＬｅｅ\tk3:62 split")
 p.write_text(s, encoding="utf-8", newline="")
 
 edit("crates/ssd-catalogue/src/art.rs", [
 ("const SECOND_FACE_PICTURES: [u8; 5] = [0x09, 0x0A, 0x0C, 0x50, 0x61];",
  "const SECOND_FACE_PICTURES: [u8; 7] = [0x09, 0x0A, 0x0C, 0x50, 0x61, 0x38, 0x31];"),
+])
+
+# 弗力札(0x38)、基紐(0x31) 的角落頭像：原本一律套用物件 28（悟空）的調色盤 → 顏色錯誤。
+# 改用 bank 09 中與其圖組相符的調色盤（弗力札 09:D300：白底紫頂；基紐 09:D360：紫膚）
+edit("crates/ssd-catalogue/src/art.rs", [
+("""    let palette =
+        rom.pointer(d::OBJECT_PORTRAIT_PALETTES + 2 * u32::from(palette_object), PALETTE_BANK)?;
+    let half = u8::from(SECOND_FACE_PICTURES.contains(&face));""",
+"""    let palette = match face {
+        0x38 => 0x09_D300,
+        0x31 => 0x09_D360,
+        _ => rom.pointer(d::OBJECT_PORTRAIT_PALETTES + 2 * u32::from(palette_object), PALETTE_BANK)?,
+    };
+    let half = u8::from(SECOND_FACE_PICTURES.contains(&face));"""),
 ])
 
 edit("crates/ssd-menus/src/screens.rs", [
