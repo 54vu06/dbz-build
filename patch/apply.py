@@ -66,14 +66,14 @@ edit("crates/ssd-catalogue/src/art.rs", [
 ])
 
 # 弗力札(0x38)、基紐(0x31) 的角落頭像：原本一律套用物件 28（悟空）的調色盤 → 顏色錯誤。
-# 改用 bank 09 中與其圖組相符的調色盤（弗力札 09:D300：白底紫頂；基紐 09:D360：紫膚）
+# 改用 bank 09 中與其圖組相符的調色盤（弗力札 09:D300：白底紫頂；基紐 09:E300（使用者挑選））
 edit("crates/ssd-catalogue/src/art.rs", [
 ("""    let palette =
         rom.pointer(d::OBJECT_PORTRAIT_PALETTES + 2 * u32::from(palette_object), PALETTE_BANK)?;
     let half = u8::from(SECOND_FACE_PICTURES.contains(&face));""",
 """    let palette = match face {
         0x38 => 0x09_D300,
-        0x31 => 0x09_D360,
+        0x31 => 0x09_E300,
         _ => rom.pointer(d::OBJECT_PORTRAIT_PALETTES + 2 * u32::from(palette_object), PALETTE_BANK)?,
     };
     let half = u8::from(SECOND_FACE_PICTURES.contains(&face));"""),
