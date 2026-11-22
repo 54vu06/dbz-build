@@ -57,7 +57,7 @@ s = s.replace("飛里沙", "弗力札")
 old = "str3:0x3E\t　　　　　　　　台式中文化\\n　　　Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\tk3:62 split"
 if s.count(old) != 1:
     sys.exit("[patch 失敗] tsv 找不到開場致謝 str3:0x3E")
-s = s.replace(old, "str3:0x3E\t台式中文化，Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\\n魔改歡樂基紐、弗力札版，\\nＢｙ　Ａｃｈ　Ｌｅｅ\tk3:62 split")
+s = s.replace(old, "str3:0x3E\t台式中文化，Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\\n魔改歡樂基紐、弗力札版，\\n　　　　　　Ｂｙ　Ａｃｈ　Ｌｅｅ\tk3:62 split")
 p.write_text(s, encoding="utf-8", newline="")
 
 edit("crates/ssd-catalogue/src/art.rs", [
