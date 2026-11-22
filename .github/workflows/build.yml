@@ -13,7 +13,7 @@ jobs:
 
       - name: 取得上游原始碼 rc2
         shell: pwsh
-        run: git clone --depth 1 --branch rc2 https://github.com/lming888/DBZ-SSD-zhTW.git src
+        run: git -c core.autocrlf=false clone --depth 1 --branch rc2 https://github.com/lming888/DBZ-SSD-zhTW.git src
 
       - name: 套用補丁
         shell: pwsh
