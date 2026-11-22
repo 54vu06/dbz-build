@@ -1,0 +1,61 @@
+name: build-launcher
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: 取得本倉庫（補丁與素材）
+        uses: actions/checkout@v4
+        with:
+          path: overlay
+
+      - name: 取得上游原始碼 rc2
+        shell: pwsh
+        run: git clone --depth 1 --branch rc2 https://github.com/lming888/DBZ-SSD-zhTW.git src
+
+      - name: 套用補丁
+        shell: pwsh
+        run: python overlay/patch/apply.py src
+
+      - name: 放入素材
+        shell: pwsh
+        run: |
+          $a = "src/launcher/assets"
+          New-Item -ItemType Directory -Force "$a/fonts","$a/licenses","$a/voice" | Out-Null
+          Copy-Item src/translations/zh-tw/zh-tw.tsv,src/translations/zh-tw/ui-zh-tw.tsv,src/translations/zh-hk/zh-hk.tsv,src/translations/zh-hk/ui-zh-hk.tsv,src/NOTICE.md,src/re/symbols.toml $a
+          Copy-Item src/LICENSE "$a/LICENSE.txt"
+          Copy-Item src/translations/zh-tw/fonts/* "$a/fonts/"
+          Copy-Item src/translations/zh-tw/licenses/* "$a/licenses/"
+          Expand-Archive overlay/assets.zip -DestinationPath "$a" -Force
+
+      - name: 安裝 Rust 1.99
+        shell: pwsh
+        run: |
+          rustup toolchain install 1.99 --profile minimal --target x86_64-pc-windows-msvc
+          rustup default 1.99
+          rustc --version
+
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: 建遊戲本體
+        shell: pwsh
+        working-directory: src
+        run: |
+          . tools/no-local-paths.ps1
+          cargo build --release -p ssd-app
+          Copy-Item target/release/ssd-recompiled.exe launcher/assets/ssd-recompiled.exe
+
+      - name: 建啟動器
+        shell: pwsh
+        working-directory: src/launcher
+        run: |
+          . ../tools/no-local-paths.ps1
+          cargo build --release
+          Copy-Item target/release/dbz-zhtw-launcher.exe "DBZ_超賽亞傳說_繁中.exe"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DBZ_launcher
+          path: src/launcher/DBZ_超賽亞傳說_繁中.exe
