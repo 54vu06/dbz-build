@@ -119,31 +119,5 @@ fn party_compact(list: &mut DrawList, view: &MenuView) {
 /// Where the corner pictures of the field menu sit:"""),
 ])
 
-# ---- 第三輪：弗力札、基紐頭像的原色（用 HD 美術包為該圖做的調色盤，不再套悟空的調色盤） ----
-edit("crates/ssd-catalogue/src/art.rs", [
-("    picture(rom, &set, (\"face_portrait_pointers\", face), palette, cells, half)\n}",
- """    let mut portrait = picture(rom, &set, ("face_portrait_pointers", face), palette, cells, half)?;
-    if let Some(colours) = native_palette(face) {
-        portrait.palette = colours;
-    }
-    Ok(portrait)
-}
-
-/// The colours the HD pack's art of a face was made in, for the extension's two faces (Frieza's final form, the second
-/// picture of the set `16:BB4F`, and Captain Ginyu, the second picture of `16:B350`): the corner faces of the original
-/// are drawn in one shared row, which would recolour their art.
-fn native_palette(face: u8) -> Option<[u16; COLOURS]> {
-    match face {
-        0x38 => Some([
-            0x0000, 0x0000, 0x6F7B, 0x2D6B, 0x627F, 0x0000, 0x4631, 0x3C87, 0x001F, 0x0000, 0x0000, 0x7FFF, 0x56B5,
-            0x7B3B, 0x7914, 0x6890,
-        ]),
-        0x31 => Some([
-            0x0000, 0x0000, 0x7B7F, 0x6659, 0x4D93, 0x390E, 0x013F, 0x43F6, 0x3373, 0x1F0F, 0x7FFF, 0x6739, 0x4210,
-            0x1E64, 0x19C6, 0x6EFC,
-        ]),
-        _ => None,
-    }
-}"""),
-])
+# （第三輪「native_palette」已移除：改用 ROM 自己的 09:D300 / 09:E300 調色盤，見上方 art.rs 修改）
 print("patch OK")
