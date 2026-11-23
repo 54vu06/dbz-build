@@ -142,4 +142,10 @@ edit("crates/ssd-app/src/hd.rs", [
  "        if key == Key::ResetAll\n            && false\n            && self.editor_allowed"),
 ])
 
+# ---- 第六輪：存檔選擇畫面不顯示「作弊（CHEATS）」標記 ----
+edit("crates/ssd-game/src/menu/driver.rs", [
+("                *mark = self.cheat_sidecar.marked(slot, checksum);",
+ "                *mark = false && self.cheat_sidecar.marked(slot, checksum);"),
+])
+
 print("patch OK")
