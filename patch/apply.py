@@ -134,4 +134,12 @@ edit("crates/ssd-save/src/lib.rs", [
 ])
 edit("re/symbols.toml", [("address = 0x7E2BA0", "address = 0x7E2C80")])
 
+# ---- 第五輪：標題畫面不顯示「Select 編輯存檔」（作弊選單已涵蓋，且本改版的存檔格式與編輯器不相容）----
+edit("crates/ssd-app/src/hd.rs", [
+("        if self.editor.is_none()\n            && self.editor_allowed\n            && on_title(wram)",
+ "        if self.editor.is_none()\n            && false\n            && self.editor_allowed\n            && on_title(wram)"),
+("        if key == Key::ResetAll\n            && self.editor_allowed",
+ "        if key == Key::ResetAll\n            && false\n            && self.editor_allowed"),
+])
+
 print("patch OK")
