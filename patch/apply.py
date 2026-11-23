@@ -54,7 +54,7 @@ s = s.replace(old, "object:24\t青蛙\tnames_objects:24 override")
 # 全遊戲「飛里沙」統一為「弗力札」（字數相同，不影響版面）
 s = s.replace("飛里沙", "弗力札")
 # 全遊戲「樂平」統一為「飲茶」（同為兩字，不影響版面）
-assert s.count("樂平") == 5, s.count("樂平")
+assert s.count("樂平") == 6, s.count("樂平")
 s = s.replace("樂平", "飲茶")
 # 開場致謝頁：保留原字樣，下方加上第二組致謝（三行以內，每行最多 16 格，這裡取 15 格以內）
 old = "str3:0x3E\t　　　　　　　　台式中文化\\n　　　Ｂｙ　Ｍｉｎｇ　Ｌｉｕ\tk3:62 split"
