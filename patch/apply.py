@@ -120,4 +120,18 @@ fn party_compact(list: &mut DrawList, view: &MenuView) {
 ])
 
 # （第三輪「native_palette」已移除：改用 ROM 自己的 09:D300 / 09:E300 調色盤，見上方 art.rs 修改）
+# ---- 第四輪：存檔格式改為本改版 ROM 的新版面（12 人隊伍使存檔變大），否則讀檔後道具袋綁不上 ----
+# 本版 ROM：標頭 SRAM 32KB；存檔欄位起點 $0100/$0700/$0D00，每欄 $5D0（影像 $4D0 + 頁 $100），備份在 +$1400，
+# 存檔標記在影像 +$4C0；道具狀態字 item_extra 由 7E:2BA0 搬到 7E:2C80（見 patchA2 的 7E 位址重新對映）。
+edit("crates/ssd-save/src/lib.rs", [
+("pub const SRAM_SIZE: usize = 0x2000;", "pub const SRAM_SIZE: usize = 0x8000;"),
+("pub const SLOT_BASES: [usize; SLOT_COUNT] = [0x100, 0x600, 0xB00];", "pub const SLOT_BASES: [usize; SLOT_COUNT] = [0x100, 0x700, 0xD00];"),
+("pub const SLOT_LEN: usize = 0x4F0;", "pub const SLOT_LEN: usize = 0x5D0;"),
+("pub const BACKUP_OFFSET: usize = 0x1000;", "pub const BACKUP_OFFSET: usize = 0x1400;"),
+("pub const IMAGE_LEN: usize = 0x3F0;", "pub const IMAGE_LEN: usize = 0x4D0;"),
+("pub const MARK_OFFSET: usize = 0x3E0;", "pub const MARK_OFFSET: usize = 0x4C0;"),
+("        if bytes.len() == SRAM_SIZE {", "        if bytes.len() >= SLOT_BASES[SLOT_COUNT - 1] + BACKUP_OFFSET + SLOT_LEN {"),
+])
+edit("re/symbols.toml", [("address = 0x7E2BA0", "address = 0x7E2C80")])
+
 print("patch OK")
